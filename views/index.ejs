@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://www.google.com/recaptcha/api.js?render=6LeSxJYnAAAAAPlmr6ng6HQjMRO1vnmI1U-9NVBQ"></script>
+  <title>reCAPTCHA</title>
+</head>
+<body>
+  <h1>reCAPTCHA form </h1>
+  <form id="myForm" action="/verify" method="POST">
+  <!-- <input type="hidden" name="recaptchagen" id="recaptchagen" > -->
+  <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response">
+  <input type="hidden" name="action" value="validate_captcha">
+    <div class="col-md-4 mb-3">
+        <label for="validationCustom01">First name</label>
+        <input type="text" class="form-control" id="validationCustom01" placeholder="First name" value="Mark" required>
+        
+      </div>
+      <div class="col-md-4 mb-3">
+        <label for="validationCustom02">Last name</label>
+        <input type="text" class="form-control" id="validationCustom02" placeholder="Last name" value="Otto" required>
+        
+      </div>
+    <!-- Add a reCAPTCHA container -->
+  
+
+    <button type="submit">Submit</button>
+
+  </form>
+
+  <script>
+    // Handle form submission
+   
+    var recaptchagen = document.getElementById("g-recaptcha-response");
+    document.getElementById('myForm').addEventListener('submit', async (event) => {
+      event.preventDefault();
+       grecaptcha.ready(async function() {
+          var token = await grecaptcha.execute('6LeSxJYnAAAAAPlmr6ng6HQjMRO1vnmI1U-9NVBQ', {action: 'submit'})
+         
+      // Send the token to the server for verification
+      return await fetch('/verify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token }),
+      })
+    
+
+      .then(function(response) {
+        // Handle the response from the server
+        if (response.ok) {
+          // reCAPTCHA verification passed
+          console.log('reCAPTCHA verification passed');
+        } else {
+          // reCAPTCHA verification failed
+          console.log('reCAPTCHA verification failed');
+        }
+      })
+      .catch(function(error) {
+        // Handle errors
+        console.error('Error:', error);
+      });
+       });
+    });
+  </script>
+</body>
+</html>
